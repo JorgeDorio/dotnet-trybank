@@ -81,8 +81,6 @@ public class TestSecondReq
     {        
 			Trybank trybank = new Trybank();
 
-			trybank.Logout();
-			
 			Action act = () => trybank.Logout();
 
 			act.Should().Throw<AccessViolationException>().WithMessage("Usuário não está logado");
