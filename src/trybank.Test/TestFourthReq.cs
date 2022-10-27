@@ -18,7 +18,7 @@ public class TestFourthReq
 			tb.Login(11,11,11);
 			tb.Bank[tb.loggedUser,3] = balance;
 
-			tb.Transfer(11,11, value);
+			tb.Transfer(22,22, value);
 
 			tb.Bank[tb.loggedUser,3].Should().Be(balance - value);
 			tb.Bank[1,3].Should().Be(value);
@@ -28,13 +28,26 @@ public class TestFourthReq
     [InlineData(0)]
     public void TestTransferWithoutLogin(int value)
     {        
-        throw new NotImplementedException();
+			Trybank tb = new Trybank();
+
+			Action act = () => tb.Transfer(1, 1, value);
+
+			act.Should().Throw<AccessViolationException>().WithMessage("Usuário já está logado");
     }
 
     [Theory(DisplayName = "Deve lançar uma exceção de usuário não logado")]
-    [InlineData(0, 0)]
+    [InlineData(30, 50)]
     public void TestTransferWithoutBalance(int balance, int value)
     {        
-        throw new NotImplementedException();
+			Trybank tb = new Trybank();
+
+			tb.RegisterAccount(11,11,11);
+			tb.RegisterAccount(22,22,22);
+			tb.Login(11,11,11);
+			tb.Bank[tb.loggedUser,3] = balance;
+
+			Action act = () => tb.Transfer(1, 1, value);
+			
+			act.Should().Throw<InvalidOperationException>().WithMessage("Saldo insuficiente");
     }
 }
